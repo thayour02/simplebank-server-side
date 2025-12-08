@@ -45,3 +45,5 @@ jobs:
       run: migrate -path db/migration -database "postgresql://user:secret@localhost:5432/newbank?sslmode=disable" -verbose up
     - name: Test
       run: go test -v -cover ./...
+      env:
+        DB_SOURCE: postgresql://user:secret@localhost:5432/newbank?sslmode=disable
