@@ -44,4 +44,4 @@ jobs:
     - name: Run migrations
       run: migrate -path db/migration -database "postgresql://user:secret@localhost:5432/newbank?sslmode=disable" -verbose up
     - name: Test
-      run: make test
+      run: go test -v -cover ./...
