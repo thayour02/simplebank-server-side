@@ -39,6 +39,6 @@ jobs:
         sudo mv migrate /usr/local/bin/migrate
         which migrate
     - name: Run migrations
-      run: make migrateup
+      run: migrate -path db/migration -database "postgresql://user:secret@postgres:5432/newbank?sslmode=disable" -verbose up
     - name: Test
       run: make test
