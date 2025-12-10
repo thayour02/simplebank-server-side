@@ -7,8 +7,8 @@ import (
 )
 
 type Store struct {
-	*Queries
 	db *sql.DB
+	*Queries
 }
 
 func NewStore(db *sql.DB) *Store {
