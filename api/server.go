@@ -26,9 +26,9 @@ func NewServer(store *db.Store) *Server {
 
 }
 
-// sever connection
-func (server *Server) Start(serverAddress string) error {
-	return server.router.Run(serverAddress)
+// server connection
+func (server *Server) Start(ServerAddress string) error {
+	return server.router.Run(ServerAddress)
 }
 
 // error response helper

@@ -7,24 +7,21 @@ import (
 	"testing"
 
 	_ "github.com/lib/pq"
+	"github.com/mybank/utils"
 )
 
-const dbDriver = "postgres"
 
-func getDBSource() string {
-	dbSource := os.Getenv("DB_SOURCE")
-	if dbSource == "" {
-		dbSource = "postgresql://root:secret@localhost:5432/newbank?sslmode=disable"
-	}
-	return dbSource
-}
+
 
 var testQueries *Queries
 var testDB *sql.DB
 
 func TestMain(m *testing.M) {
-	var err error
-	testDB, err = sql.Open(dbDriver, getDBSource())
+	config,err := utils.LoadConfig("../..")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+	testDB, err = sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
