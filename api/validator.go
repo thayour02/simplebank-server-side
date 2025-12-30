@@ -5,6 +5,7 @@ import (
 	"github.com/mybank/utils"
 )
 
+
 var validCurrency validator.Func = func(fieldLevel validator.FieldLevel) bool {
 	if currency, ok := fieldLevel.Field().Interface().(string); ok {
 		return utils.IsSupportedCurrency(currency)

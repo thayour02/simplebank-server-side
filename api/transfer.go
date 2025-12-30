@@ -3,7 +3,6 @@ package api
 import (
 	"database/sql"
 	"fmt"
-
 	"github.com/gin-gonic/gin"
 	db "github.com/mybank/db/sqlc"
 )
@@ -30,8 +29,6 @@ func (server *Server) CreateTransfers(ctx *gin.Context) {
 		return
 	}
 	if !server.validAmount(ctx, req.FromAccountID, req.Amount) {
-		fmt.Printf("Invalid transfer amount: %d\n", req.Amount)
-		fmt.Printf("account id: %d\n", req.FromAccountID)
 		return
 	}
 
@@ -70,37 +67,23 @@ func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency s
 }
 
 func (server *Server) validAmount(ctx *gin.Context, accountID int64, amount int64) bool {
-	// Debug log the input parameters
-	fmt.Printf("[DEBUG] validAmount - AccountID: %d, Requested Amount: %d\n", accountID, amount)
 
 	account, err := server.store.GetAccount(ctx, accountID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			errMsg := fmt.Errorf("account %d not found", accountID)
-			fmt.Printf("[ERROR] %v\n", errMsg)
-			ctx.JSON(404, errorsResponse(errMsg))
+			ctx.JSON(404, errorsResponse(err))
 			return false
 		}
 
-		errMsg := fmt.Errorf("failed to get account %d: %v", accountID, err)
-		fmt.Printf("[ERROR] %v\n", errMsg)
-		ctx.JSON(500, errorsResponse(errMsg))
+		ctx.JSON(500, errorsResponse(err))
 		return false
 	}
-
-	// Debug log the account details
-	fmt.Printf("[DEBUG] Account %d - Current Balance: %d, Requested Amount: %d\n",
-		account.ID, account.Balance, amount)
 
 	if account.Balance < amount {
 		err := fmt.Errorf("account %d insufficient funds: %d < %d",
 			account.ID, account.Balance, amount)
-		fmt.Printf("[ERROR] %v\n", err)
 		ctx.JSON(400, errorsResponse(err))
 		return false
 	}
-
-	fmt.Printf("[DEBUG] Sufficient funds - Account %d: %d >= %d\n",
-		account.ID, account.Balance, amount)
 	return true
 }
