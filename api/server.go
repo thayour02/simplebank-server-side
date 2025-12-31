@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-	"github.com/mybank/db/sqlc"
+	db "github.com/mybank/db/sqlc"
 )
 
 type Server struct {
@@ -21,11 +21,11 @@ func NewServer(store db.Store) *Server {
 		val.RegisterValidation("currency", validCurrency)
 	}
 
+	router.POST("/user", server.createUser)
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount)
 	router.GET("/accounts", server.listAccounts)
 	router.POST("/transfer", server.CreateTransfers)
-
 
 	server.router = router
 
